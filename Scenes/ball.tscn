@@ -1,0 +1,34 @@
+[gd_scene load_steps=5 format=3 uid="uid://ckv2t4v8orcwo"]
+
+[ext_resource type="Texture2D" uid="uid://clsdepw7tbnc1" path="res://Art/square.png" id="1_0a38y"]
+[ext_resource type="Script" path="res://Scripts/ball.gd" id="1_gpvdq"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_hr35p"]
+friction = 0.0
+bounce = 1.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_5ro3a"]
+radius = 50.0
+
+[node name="Ball" type="RigidDynamicBody2D" groups=["Ball"]]
+mass = 1000.0
+physics_material_override = SubResource( "PhysicsMaterial_hr35p" )
+gravity_scale = 0.0
+continuous_cd = 2
+contacts_reported = 5
+contact_monitor = true
+script = ExtResource( "1_gpvdq" )
+__meta__ = {
+"_edit_group_": true
+}
+speed = 1200
+color = Color(1, 1, 1, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( "CircleShape2D_5ro3a" )
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(50, 50)
+texture = ExtResource( "1_0a38y" )
+
+[connection signal="body_exited" from="." to="." method="_on_ball_body_exited"]

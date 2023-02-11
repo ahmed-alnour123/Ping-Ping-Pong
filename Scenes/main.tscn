@@ -1,0 +1,95 @@
+[gd_scene load_steps=13 format=3 uid="uid://bpkteigqhaf2m"]
+
+[ext_resource type="PackedScene" uid="uid://c8xvu25ddcuqo" path="res://Scenes/player.tscn" id="1_67x4l"]
+[ext_resource type="Script" path="res://Scripts/GameManager.gd" id="1_bu4q1"]
+[ext_resource type="PhysicsMaterial" uid="uid://b403mumkjeav1" path="res://Resources/bouncy_physics_material.tres" id="2_3dwjm"]
+[ext_resource type="PackedScene" uid="uid://ckv2t4v8orcwo" path="res://Scenes/ball.tscn" id="2_lh1ir"]
+[ext_resource type="Script" path="res://Scripts/BallTriggers.gd" id="4_w4l0h"]
+[ext_resource type="PackedScene" uid="uid://bgntsp2114407" path="res://Scenes/hud.tscn" id="5_t3ws0"]
+[ext_resource type="Script" path="res://Scripts/HUD.gd" id="7_4mx2y"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ijvoi"]
+size = Vector2(1933, 101)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3sx0t"]
+size = Vector2(144, 1176)
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_d5ulp"]
+friction = 0.0
+bounce = 5.88
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fd0xv"]
+size = Vector2(72, 1080)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_uoi8t"]
+size = Vector2(72, 1080)
+
+[node name="Main" type="Node2D"]
+
+[node name="GameManager" type="Node" parent="."]
+script = ExtResource( "1_bu4q1" )
+
+[node name="Camera2D" type="Camera2D" parent="."]
+anchor_mode = 0
+current = true
+editor_draw_limits = true
+editor_draw_drag_margin = true
+
+[node name="ScreenEdge" type="StaticBody2D" parent="." groups=["Wall"]]
+physics_material_override = ExtResource( "2_3dwjm" )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ScreenEdge"]
+position = Vector2(952, -40)
+shape = SubResource( "RectangleShape2D_ijvoi" )
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="ScreenEdge"]
+position = Vector2(952, 1128)
+shape = SubResource( "RectangleShape2D_ijvoi" )
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="ScreenEdge"]
+position = Vector2(1984, 540)
+shape = SubResource( "RectangleShape2D_3sx0t" )
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="ScreenEdge"]
+position = Vector2(-56, 540)
+shape = SubResource( "RectangleShape2D_3sx0t" )
+
+[node name="Player1" parent="." instance=ExtResource( "1_67x4l" )]
+position = Vector2(128, 540)
+color = Color(0, 0, 1, 1)
+
+[node name="Player2" parent="." instance=ExtResource( "1_67x4l" )]
+position = Vector2(1792, 540)
+is_p1 = false
+color = Color(1, 0, 0, 1)
+
+[node name="Ball2" parent="." instance=ExtResource( "2_lh1ir" )]
+position = Vector2(952, 648)
+start_direction = Vector2(-1, 0)
+
+[node name="Ball1" parent="." instance=ExtResource( "2_lh1ir" )]
+position = Vector2(952, 440)
+physics_material_override = SubResource( "PhysicsMaterial_d5ulp" )
+start_direction = Vector2(1, 0)
+
+[node name="BallTriggers" type="Node2D" parent="."]
+
+[node name="Player1Trigger" type="Area2D" parent="BallTriggers"]
+script = ExtResource( "4_w4l0h" )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BallTriggers/Player1Trigger"]
+position = Vector2(8, 540)
+shape = SubResource( "RectangleShape2D_fd0xv" )
+
+[node name="Player2Trigger" type="Area2D" parent="BallTriggers"]
+script = ExtResource( "4_w4l0h" )
+is_p1_trigger = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BallTriggers/Player2Trigger"]
+position = Vector2(1876, 540)
+shape = SubResource( "RectangleShape2D_uoi8t" )
+
+[node name="HUD" parent="." instance=ExtResource( "5_t3ws0" )]
+script = ExtResource( "7_4mx2y" )
+
+[connection signal="score_updated" from="GameManager" to="HUD" method="_on_game_manager_score_updated"]
